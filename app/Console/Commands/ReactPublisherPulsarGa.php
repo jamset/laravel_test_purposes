@@ -1,7 +1,6 @@
 <?php namespace App\Console\Commands;
 
 use App\Console\Inventory\ConsoleConstants;
-use App\Console\Inventory\ZmqSocketsConstants;
 use React\PublisherPulsar\Inventory\PublisherPulsarDto;
 use React\PublisherPulsar\Inventory\PulsarSocketsParamsDto;
 use React\PublisherPulsar\Pulsar;
@@ -16,7 +15,7 @@ class ReactPublisherPulsarGa extends Command
      *
      * @var string
      */
-    protected $name = ConsoleConstants::REACT_PUBLISHER_PULSAR_GA;
+    protected $name = 'react:pulsar-ga';
 
     /**
      * The console command description.
@@ -46,21 +45,24 @@ class ReactPublisherPulsarGa extends Command
         $pulsar = new Pulsar();
 
         $publisherPulsarDto = new PublisherPulsarDto();
+
         $publisherPulsarDto->setPulsationIterationPeriod(1);
         $publisherPulsarDto->setSubscribersPerIteration(10);
-        $publisherPulsarDto->setModuleName(ConsoleConstants::REACT_PUBLISHER_PULSAR_GA);
-        $publisherPulsarDto->setReplyStackCommandName(ConsoleConstants::PHP_ARTISAN . ConsoleConstants::REACT_PULSAR_REPLY_STACK);
+        $publisherPulsarDto->setModuleName('react:pulsar-ga');
+        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack');
         $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);
+
+        //TODO: and if Logger wasn't set?
         $publisherPulsarDto->setLogger(\Log::getMonolog());
         $publisherPulsarDto->setMaxWaitReplyStackResult(7);
 
         $pulsarSocketsParams = new PulsarSocketsParamsDto();
-        $pulsarSocketsParams->setReplyToReplyStackSocketAddress(ZmqSocketsConstants::PULSAR_GA_REPLY_TO_REPLY_STACK_ADDRESS);
-        $pulsarSocketsParams->setPushToReplyStackSocketAddress(ZmqSocketsConstants::PULSAR_GA_PUSH_TO_REPLY_STACK_ADDRESS);
-        $pulsarSocketsParams->setPublishSocketAddress(ZmqSocketsConstants::PULSAR_GA_PUBLISH_ADDRESS);
-        $pulsarSocketsParams->setPullSocketAddress(ZmqSocketsConstants::PULSAR_GA_PULL_ADDRESS);
 
-        $pulsarSocketsParams->setReplyStackSocketAddress(ZmqSocketsConstants::PULSAR_GA_REPLY_STACK_ADDRESS);
+        $pulsarSocketsParams->setReplyToReplyStackSocketAddress('tcp://127.0.0.1:6261');
+        $pulsarSocketsParams->setPushToReplyStackSocketAddress('tcp://127.0.0.1:6262');
+        $pulsarSocketsParams->setPublishSocketAddress('tcp://127.0.0.1:6263');
+        $pulsarSocketsParams->setPullSocketAddress('tcp://127.0.0.1:6264');
+        $pulsarSocketsParams->setReplyStackSocketAddress('tcp://127.0.0.1:6265');
 
         $publisherPulsarDto->setPulsarSocketsParams($pulsarSocketsParams);
 
